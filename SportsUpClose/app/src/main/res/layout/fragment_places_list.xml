@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.brianstacks.sportsupclose.PlacesListFragment">
+
+<Spinner
+    android:id="@+id/mySpinner"
+    android:layout_width="200dp"
+    android:layout_height="60dp"
+    android:textAlignment="center"
+    android:background="@drawable/spinner_bkg"
+    android:layout_marginBottom="10dp"
+    android:layout_gravity="center"
+    android:spinnerMode="dropdown"
+    />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/myList"/>
+    </LinearLayout>
+
+</LinearLayout>

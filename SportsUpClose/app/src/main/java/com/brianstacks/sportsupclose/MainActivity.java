@@ -1,6 +1,7 @@
 package com.brianstacks.sportsupclose;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PlacesListFragment placesListFragment =new PlacesListFragment();
+
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        SplashFragment splashFragment = new SplashFragment();
+        trans.replace(R.id.fragmentContainer, placesListFragment, placesListFragment.TAG);
+        trans.commit();
     }
 
 
