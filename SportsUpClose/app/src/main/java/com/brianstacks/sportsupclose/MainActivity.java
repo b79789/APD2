@@ -2,23 +2,37 @@ package com.brianstacks.sportsupclose;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SplashFragment.OnSplashscreenListener {
+
+    public static final String MY_PREFS_NAME = "MY_PREFS_NAME";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PlacesListFragment placesListFragment =new PlacesListFragment();
-
+        SharedPreferences prefs = this.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        float value = prefs.getFloat("lat",0);
+        //Log.v("latVal", String.valueOf(value));
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        SplashFragment splashFragment = new SplashFragment();
-        trans.replace(R.id.fragmentContainer, placesListFragment, placesListFragment.TAG);
-        trans.commit();
+        if (value != 0){
+            float lat = prefs.getFloat("lat", 0);//0 is the default value.
+            float lon = prefs.getFloat("lon", 0); //0 is the default value.
+            PlacesListFragment placesListFragment =PlacesListFragment.newInstance(lat,lon);
+            trans.replace(R.id.fragmentContainer, placesListFragment, placesListFragment.TAG);
+            trans.commit();
+        }else{
+            SplashFragment splashFragment = new SplashFragment();
+            trans.replace(R.id.fragmentContainer, splashFragment, splashFragment.TAG);
+            trans.commit();
+        }
+
     }
 
 
@@ -39,8 +53,22 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.resetPrefs){
+            /*SharedPreferences preferences = getSharedPreferences(MY_PREFS_NAME, 0);
+            preferences.edit().clear().apply();*/
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(double lat, double lon) {
+        SharedPreferences.Editor editor = this.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putFloat("lat", (float) lat);
+        editor.putFloat("lon", (float) lon);
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        PlacesListFragment placesListFragment =PlacesListFragment.newInstance(lat,lon);
+        trans.replace(R.id.fragmentContainer, placesListFragment, placesListFragment.TAG);
+        trans.commit();
     }
 }

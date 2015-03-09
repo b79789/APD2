@@ -1,22 +1,30 @@
 package com.brianstacks.sportsupclose;
 
+import java.io.Serializable;
+
 /**
  * Created by Brian Stacks
  * on 3/6/15
  * for FullSail.edu.
  */
-public class GooglePlace {
+public class GooglePlace implements Serializable{
+
+    private static final long serialVersionUID = 453332330552888L;
 
     private String name;
     private String category;
     private String rating;
     private String open;
+    private double mLat;
+    private double mLong;
 
     public GooglePlace() {
         this.name = "";
         this.rating = "";
         this.open = "";
         this.setCategory("");
+        this.mLat=0;
+        this.mLong=0;
     }
 
     public void setName(String name) {
@@ -49,6 +57,22 @@ public class GooglePlace {
 
     public String getOpenNow() {
         return open;
+    }
+
+    public double getLat(){
+        return mLat;
+    }
+
+    public void setLat(double lat) {
+        mLat = lat;
+    }
+
+    public double getLon(){
+        return mLong;
+    }
+
+    public void setLon(double lon) {
+        mLong = lon;
     }
 }
 

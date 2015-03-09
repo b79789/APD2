@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.TextView;
 
 
 public class MapDetailActivity extends Activity {
@@ -61,6 +62,14 @@ public class MapDetailActivity extends Activity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_map_detail, container, false);
             return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(Bundle savedInstance) {
+            super.onActivityCreated(savedInstance);
+            TextView textView = (TextView)getActivity().findViewById(R.id.detailText);
+            String details = (String)getActivity().getIntent().getExtras().get("ListObject");
+            textView.setText(details);
         }
     }
 }

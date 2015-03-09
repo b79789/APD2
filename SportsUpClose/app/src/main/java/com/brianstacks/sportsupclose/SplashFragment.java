@@ -1,9 +1,17 @@
 package com.brianstacks.sportsupclose;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,26 +19,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-public class SplashFragment extends Fragment {
+public class SplashFragment extends Fragment implements LocationListener{
     public final String TAG = "SplashFragment.TAG";
-
-    //private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SplashFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SplashFragment newInstance(String param1, String param2) {
-        SplashFragment fragment = new SplashFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    LocationManager mManager;
+    GooglePlace googlePlace;
+    private OnSplashscreenListener mListener;
+    private static final int REQUEST_ENABLE_GPS = 0x02001;
 
     public SplashFragment() {
         // Required empty public constructor
@@ -39,9 +33,9 @@ public class SplashFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        mManager = (LocationManager)getActivity().getSystemService(MainActivity.LOCATION_SERVICE);
+        googlePlace = new GooglePlace();
 
-        }
     }
 
     @Override
@@ -54,28 +48,42 @@ public class SplashFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstance){
         super.onActivityCreated(savedInstance);
+        enableGps();
         Button button = (Button)getActivity().findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"You did it",Toast.LENGTH_SHORT).show();
+                mListener.onFragmentInteraction(googlePlace.getLat(),googlePlace.getLon());
             }
         });
 
     }
 
-   /* // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnSplashscreenListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -88,19 +96,38 @@ public class SplashFragment extends Fragment {
         mListener = null;
     }
 
-    *//**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }*/
+
+    public interface OnSplashscreenListener {
+        public void onFragmentInteraction(double lat,double lon);
+    }
+
+    private void enableGps() {
+        if(mManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, this);
+
+
+            Location loc = mManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(loc != null) {
+                googlePlace.setLat(loc.getLatitude());
+                googlePlace.setLon(loc.getLongitude());
+            }
+
+        } else {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("GPS Unavailable")
+                    .setMessage("Please enable GPS in the system settings.")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(settingsIntent, REQUEST_ENABLE_GPS);
+                        }
+
+                    })
+                    .show();
+        }
+    }
+
 
 }

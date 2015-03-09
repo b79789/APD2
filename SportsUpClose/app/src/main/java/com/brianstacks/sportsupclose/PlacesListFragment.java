@@ -1,6 +1,7 @@
 package com.brianstacks.sportsupclose;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -24,8 +23,6 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -35,18 +32,17 @@ public class PlacesListFragment extends Fragment {
     ArrayList<GooglePlace> venuesList;
     final String GOOGLE_KEY = "AIzaSyB9iOw6wF4FwbOdUTZYiU_MxsbfWM5iMOI";
             // this is the center of Home
-    final String latitude = "35.68364";
-    final String longtitude = "-81.21956";
+     String latitude;
+     String longtitude ;
     String sortVal;
     ArrayAdapter myAdapter;
     ListView listView;
 
-
-    // TODO: Rename and change types and number of parameters
-    public static PlacesListFragment newInstance(String param1, String param2) {
+    public static PlacesListFragment newInstance(double param1, double param2) {
         PlacesListFragment fragment = new PlacesListFragment();
         Bundle args = new Bundle();
-
+        args.putDouble("lat",param1);
+        args.putDouble("lon",param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,10 +54,7 @@ public class PlacesListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listView= (ListView)getActivity().findViewById(R.id.myList);
-        if (getArguments() != null) {
 
-        }
     }
 
     @Override
@@ -74,13 +67,19 @@ public class PlacesListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstance){
         super.onActivityCreated(savedInstance);
+        if (getArguments()!=null) {
+            if (getArguments().containsKey("lat") && getArguments().containsKey("lon")) {
+                latitude = String.valueOf(getArguments().getDouble("lat"));
+                longtitude = String.valueOf(getArguments().getDouble("lon"));
+                Log.v("PlacelistFrag", "it has the key");
+            } else {
+                latitude = "0";
+                longtitude = "0";
+            }
+        }
         listView= (ListView)getActivity().findViewById(R.id.myList);
-
         // start the AsyncTask that makes the call for the venus search.
         new googleplaces().execute();
-        final String[] eatables = {"aTesting","vTesting1","fTesting2","hTesting3","kTesting4","gTesting5","bTesting","dTesting","Testing",
-                "cTesting","eTesting","Testing","Testing","Testing","Testing","Testing","Testing","Testing","Testing",
-                "Testing","Testing","Testing","Testing","Testing","Testing","Testing","Testing","Testing","Testing",};
         Spinner spinner = (Spinner)getActivity().findViewById(R.id.mySpinner);
         String[] items = new String[]{"Closest", "Most Popular"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
@@ -99,8 +98,6 @@ public class PlacesListFragment extends Fragment {
                         new googleplaces().execute();
                         // Whatever you want to happen when the second item gets selected
                         break;
-
-
                 }
 
             }
@@ -112,52 +109,6 @@ public class PlacesListFragment extends Fragment {
         });
     }
 
-
-    private void reloadAllData(){
-        // fire the event
-        myAdapter.notifyDataSetChanged();
-    }
-/*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    *//**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }*/
-
-
     public class googleplaces extends AsyncTask<View, Void, String> {
 
         String temp;
@@ -166,9 +117,6 @@ public class PlacesListFragment extends Fragment {
         protected String doInBackground(View... urls) {
             // make Call to the url
             temp = makeCall("https://maps.googleapis.com/maps/api/place/search/json?location=" + latitude + "," + longtitude + sortVal+"&keyword=sports&key=" + GOOGLE_KEY);
-
-            //print the call in the console
-            Log.v("makeCall","https://maps.googleapis.com/maps/api/place/search/json?location=" + latitude + "," + longtitude + "&radius=500&keyword=sports&key=" + GOOGLE_KEY);
             return "";
         }
 
@@ -189,13 +137,12 @@ public class PlacesListFragment extends Fragment {
                 // parse Google places search result
                 venuesList = (ArrayList<GooglePlace>) parseGoogleParse(temp);
 
-                List<String> listTitle = new ArrayList<String>();
+                List<String> listTitle = new ArrayList<>();
 
                 for (int i = 0; i < venuesList.size(); i++) {
-                    Log.d("venuesList", String.valueOf(venuesList.size()));
                     // make a list of the venus that are loaded in the list.
                     // show the name, the category and the city
-                    listTitle.add(i, venuesList.get(i).getName() + "\nOpen Now: " + venuesList.get(i).getOpenNow() + "\n(" + venuesList.get(i).getCategory() + ")");
+                    listTitle.add(i, venuesList.get(i).getName() + "\nOpen Now: " + venuesList.get(i).getOpenNow() + "\n" + venuesList.get(i).getCategory() + "\n" +venuesList.get(i).getLat()+ "\n" +venuesList.get(i).getLon());
                 }
 
                 // set the results to the list
@@ -206,7 +153,9 @@ public class PlacesListFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String info = parent.getItemAtPosition(position).toString();
-                        Toast.makeText(getActivity(), "Item "+info, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity().getApplicationContext(), MapDetailActivity.class);
+                        intent.putExtra("ListObject", info);
+                        startActivity(intent);
                     }
                 });
                 //setListAdapter(myAdapter);
@@ -218,8 +167,6 @@ public class PlacesListFragment extends Fragment {
 
         // string buffers the url
 
-        StringBuffer buffer_string = new StringBuffer(url);
-
         String replyString = "";
 
         // instantiate an HttpClient
@@ -228,7 +175,7 @@ public class PlacesListFragment extends Fragment {
 
         // instantiate an HttpGet
 
-        HttpGet httpget = new HttpGet(buffer_string.toString());
+        HttpGet httpget = new HttpGet(url);
 
         try {
 
@@ -240,7 +187,7 @@ public class PlacesListFragment extends Fragment {
 
             BufferedInputStream bis = new BufferedInputStream(is);
             ByteArrayBuffer baf = new ByteArrayBuffer(20);
-            int current = 0;
+            int current;
             while ((current = bis.read()) != -1) {
                 baf.append((byte) current);
             }
@@ -249,7 +196,7 @@ public class PlacesListFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("replyString",replyString);
+        //Log.d("replyString",replyString);
 
         // trim the whitespaces
 
@@ -291,7 +238,17 @@ public class PlacesListFragment extends Fragment {
 
                             for (int j = 0; j < typesArray.length(); j++) {
                                 poi.setCategory(typesArray.getString(j) + ", " + poi.getCategory());
+
                             }
+                        }
+                        if (jsonArray.getJSONObject(i).has("geometry")){
+                            JSONObject geoObject = jsonArray.getJSONObject(i).getJSONObject("geometry");
+                            JSONObject locationObject = geoObject.getJSONObject("location");
+                            double lat = (double) locationObject.get("lat");
+                            double lon = (double) locationObject.get("lng");
+                            poi.setLat(lat);
+                            poi.setLon(lon);
+
                         }
                     }
                     temp.add(poi);
