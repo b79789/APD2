@@ -49,9 +49,12 @@ public class DataAdapter extends BaseAdapter {
         TextView tv = (TextView) view.findViewById(R.id.listText);
         TextView tv2 = (TextView) view.findViewById(R.id.listText2);
         TextView tv3 = (TextView) view.findViewById(R.id.listText3);
+        TextView tv4 = (TextView) view.findViewById(R.id.listText4);
         tv.setText(enteredData.getName());
         tv2.setText(enteredData.getAddress());
         tv3.setText(enteredData.getOpenNow());
+        tv4.setText(enteredData.getDistance());
+
 
         return  view;
     }

@@ -43,7 +43,6 @@ public class PlacesListFragment extends Fragment {
      String latitude;
      String longtitude ;
     String sortVal;
-    ArrayAdapter myAdapter;
     ListView listView;
     List<String> listTitle;
 
@@ -123,6 +122,8 @@ public class PlacesListFragment extends Fragment {
     public class googleplaces extends AsyncTask<View, Void, String> {
 
         String temp;
+        double placeLat;
+        double placeLon;
 
         @Override
         protected String doInBackground(View... urls) {
@@ -148,30 +149,10 @@ public class PlacesListFragment extends Fragment {
                 // parse Google places search result
                 venuesList = (ArrayList<GooglePlace>) parseGoogleParse(temp);
 
-
-
-                for (int i = 0; i < venuesList.size(); i++) {
-                    // make a list of the places that are loaded in the list.
-                    listTitle.add(i, venuesList.get(i).getName() + "\n" + venuesList.get(i).getAddress()  + venuesList.get(i).getOpenNow());
-                }
-
-                Location selected_location=new Location("locationA");
-                selected_location.setLatitude(getArguments().getDouble("lat"));
-                selected_location.setLongitude(getArguments().getDouble("lon"));
-                Location near_locations=new Location("locationA");
-                near_locations.setLatitude(17.375775);
-                near_locations.setLongitude(78.469218);
-
-
-                double distance=selected_location.distanceTo(near_locations);
-                double test= (double) distance/ 1280;
-                Log.v("distance", String.valueOf(distance));
-
                 if (getActivity()!=null){
                     // set the results to the list
                     // and show them in the xml
                     DataAdapter dataAdapter = new DataAdapter(getActivity(), venuesList);
-                    myAdapter = new ArrayAdapter<>(getActivity(), R.layout.row_layout, R.id.listText, listTitle);
                     listView.setAdapter(dataAdapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -232,7 +213,8 @@ public class PlacesListFragment extends Fragment {
 
     }
 
-    private static ArrayList parseGoogleParse(final String response) {
+    private  ArrayList parseGoogleParse(final String response) {
+
 
         ArrayList temp = new ArrayList();
         try {
@@ -276,6 +258,19 @@ public class PlacesListFragment extends Fragment {
                             double lon = (double) locationObject.get("lng");
                             poi.setLat(lat);
                             poi.setLon(lon);
+                            Location selected_location=new Location("locationA");
+                            double amount = Double.parseDouble(latitude);
+                            double amount2 = Double.parseDouble(longtitude);
+                            selected_location.setLatitude(amount);
+                            selected_location.setLongitude(amount2);
+                            Location near_locations=new Location("locationA");
+                            near_locations.setLatitude(lat);
+                            near_locations.setLongitude(lon);
+                            double distance=selected_location.distanceTo(near_locations);
+                            double test= distance/ 1609.344;
+                            test = Math.floor(test * 100) / 100;
+                            Log.v("distance", String.valueOf(test));
+                            poi.setDistance(String.valueOf(test)+" Miles");
 
                         }
 
