@@ -17,6 +17,8 @@ public class GooglePlace implements Serializable{
     private String open;
     private double mLat;
     private double mLong;
+    private double distance;
+    private String address;
 
     public GooglePlace() {
         this.name = "";
@@ -25,6 +27,8 @@ public class GooglePlace implements Serializable{
         this.setCategory("");
         this.mLat=0;
         this.mLong=0;
+        this.address="";
+        this.distance=0;
     }
 
     public void setName(String name) {
@@ -73,6 +77,21 @@ public class GooglePlace implements Serializable{
 
     public void setLon(double lon) {
         mLong = lon;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setDistance(double distance1){
+        this.distance=distance1;
+    }
+    public double getDistance(){
+        return distance;
     }
 }
 
