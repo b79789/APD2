@@ -31,9 +31,9 @@ public class MapDetailActivity extends FragmentActivity {
         FragmentTransaction trans = getFragmentManager().beginTransaction();
 
         if (savedInstanceState==null){
-            AdFragment adFragment = new AdFragment();
+            //AdFragment adFragment = new AdFragment();
 
-            trans.add(adFragment,AdFragment.TAG);
+            //trans.add(adFragment,AdFragment.TAG);
             trans.replace(R.id.container, new DetailsFragment()).commit();
         }
 

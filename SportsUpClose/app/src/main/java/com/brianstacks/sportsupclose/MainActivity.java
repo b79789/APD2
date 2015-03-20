@@ -27,8 +27,8 @@ public class MainActivity extends Activity implements SplashFragment.OnSplashscr
         float value = prefs.getFloat("lat",0);
         Log.v("latVal", String.valueOf(value));
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        AdFragment adFragment = new AdFragment();
-        trans.add(adFragment,AdFragment.TAG);
+        //AdFragment adFragment = new AdFragment();
+        //trans.add(adFragment,AdFragment.TAG);
 
         if (value != 0){
             float lat = prefs.getFloat("lat", 0);//0 is the default value.

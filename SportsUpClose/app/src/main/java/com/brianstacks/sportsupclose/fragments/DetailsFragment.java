@@ -162,50 +162,52 @@ public class DetailsFragment extends Fragment{
         // get map by id
         mapView.onCreate(savedInstance);
         mMap=mapView.getMap();
+        if (mMap!=null) {
 
-        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                // create markers
-                MarkerOptions mo = new MarkerOptions()
-                        .position(new LatLng(googlePlace.getLat(), googlePlace.getLon())).title(googlePlace.getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.x_spot));
-                Marker marker = mMap.addMarker(mo);
-                MarkerOptions mo2 = new MarkerOptions()
-                        .position(new LatLng(uLat, uLon)).title("Starting Position")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
-                // add markers to map
-                mMap.addMarker(mo);
-                mMap.addMarker(mo2);
-                mMarkers.put(marker.getId(),googlePlace);
-                mMap.setInfoWindowAdapter(new MarkerAdapter());
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
+            mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                @Override
+                public void onMapLoaded() {
+                    // create markers
+                    MarkerOptions mo = new MarkerOptions()
+                            .position(new LatLng(googlePlace.getLat(), googlePlace.getLon())).title(googlePlace.getName())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.x_spot));
+                    Marker marker = mMap.addMarker(mo);
+                    MarkerOptions mo2 = new MarkerOptions()
+                            .position(new LatLng(uLat, uLon)).title("Starting Position")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
+                    // add markers to map
+                    mMap.addMarker(mo);
+                    mMap.addMarker(mo2);
+                    mMarkers.put(marker.getId(), googlePlace);
+                    mMap.setInfoWindowAdapter(new MarkerAdapter());
+                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
 
-                    }
-                });
-                mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
+                        }
+                    });
+                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(LatLng latLng) {
 
-                    }
-                });
-                mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                    @Override
-                    public void onMapLongClick(LatLng latLng) {
+                        }
+                    });
+                    mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                        @Override
+                        public void onMapLongClick(LatLng latLng) {
 
-                    }
-                });
+                        }
+                    });
 
-                // set the animate camera between the two points here
-                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-                boundsBuilder.include(new LatLng(uLat,uLon));
-                boundsBuilder.include(new LatLng(googlePlace.getLat(),googlePlace.getLon()));
-                LatLngBounds bounds = boundsBuilder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-            }
-        });
+                    // set the animate camera between the two points here
+                    LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                    boundsBuilder.include(new LatLng(uLat, uLon));
+                    boundsBuilder.include(new LatLng(googlePlace.getLat(), googlePlace.getLon()));
+                    LatLngBounds bounds = boundsBuilder.build();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                }
+            });
+        }
     }
 
     private class MarkerAdapter implements GoogleMap.InfoWindowAdapter {
