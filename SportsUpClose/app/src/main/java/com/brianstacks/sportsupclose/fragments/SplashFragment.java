@@ -7,17 +7,13 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
-
 import com.brianstacks.sportsupclose.GooglePlace;
 import com.brianstacks.sportsupclose.MainActivity;
 import com.brianstacks.sportsupclose.R;

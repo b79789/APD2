@@ -1,9 +1,8 @@
 package com.brianstacks.sportsupclose.fragments;
 
 
-import android.content.ClipData;
+import android.content.Context;
 import android.graphics.Color;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -16,17 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.brianstacks.sportsupclose.GooglePlace;
 import com.brianstacks.sportsupclose.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -35,10 +28,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -50,7 +41,6 @@ import java.util.List;
 
 
 public class DetailsFragment extends Fragment{
-    public static final String TAG = "DetailsFragment.TAG";
 
     MapView mapView;
     GoogleMap mMap;
@@ -145,9 +135,7 @@ public class DetailsFragment extends Fragment{
         TextView textView2 = (TextView)getActivity().findViewById(R.id.detailText2);
         TextView textView3 = (TextView)getActivity().findViewById(R.id.detailText3);
         mapView = (MapView) getActivity().findViewById(R.id.map);
-
         googlePlace = (GooglePlace)getActivity().getIntent().getExtras().get("ListObject");
-        Log.v("address",googlePlace.getAddress());
         final double uLat =(double)getActivity().getIntent().getExtras().get("userLat");
         final double uLon =(double)getActivity().getIntent().getExtras().get("userLon");
         myArrayList=new ArrayList<>();
@@ -167,6 +155,7 @@ public class DetailsFragment extends Fragment{
             mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                 @Override
                 public void onMapLoaded() {
+
                     // create markers
                     MarkerOptions mo = new MarkerOptions()
                             .position(new LatLng(googlePlace.getLat(), googlePlace.getLon())).title(googlePlace.getName())
@@ -198,7 +187,10 @@ public class DetailsFragment extends Fragment{
 
                         }
                     });
-
+                    mMap.setPadding(20,20,20,20);
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setCompassEnabled(true);
+                    mMap.getUiSettings().setMapToolbarEnabled(true);
                     // set the animate camera between the two points here
                     LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                     boundsBuilder.include(new LatLng(uLat, uLon));
@@ -239,8 +231,6 @@ public class DetailsFragment extends Fragment{
         double uLon =(double)getActivity().getIntent().getExtras().get("userLon");
         @Override
         protected StringBuilder doInBackground(URL... params) {
-            Log.i(TAG, "doInBackground of ApiDirectionsAsyncTask");
-
             HttpURLConnection mUrlConnection = null;
             StringBuilder mJsonResults = new StringBuilder();
             try {
@@ -319,8 +309,6 @@ public class DetailsFragment extends Fragment{
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
                     LatLng position = new LatLng(lat, lng);
-                    Log.v("lat+lon", String.valueOf(lat + lng));
-
                     points.add(position);
                 }
 

@@ -1,12 +1,8 @@
 package com.brianstacks.sportsupclose.fragments;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.app.Fragment;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,18 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.brianstacks.sportsupclose.R;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class DirectionsFragment extends Fragment {
     ListView listView;
-    public static final String TAG = "DirectionsFragment.TAG";
 
 
     public DirectionsFragment() {

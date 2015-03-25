@@ -14,13 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.brianstacks.sportsupclose.DataAdapter;
 import com.brianstacks.sportsupclose.GooglePlace;
 import com.brianstacks.sportsupclose.MapDetailActivity;
 import com.brianstacks.sportsupclose.R;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -122,8 +119,6 @@ public class PlacesListFragment extends Fragment {
     public class googleplaces extends AsyncTask<View, Void, String> {
 
         String temp;
-        double placeLat;
-        double placeLon;
 
         @Override
         protected String doInBackground(View... urls) {
@@ -269,7 +264,6 @@ public class PlacesListFragment extends Fragment {
                             double distance=selected_location.distanceTo(near_locations);
                             double test= distance/ 1609.344;
                             test = Math.floor(test * 100) / 100;
-                            Log.v("distance", String.valueOf(test));
                             poi.setDistance(String.valueOf(test)+" Miles");
 
                         }
