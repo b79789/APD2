@@ -14,6 +14,9 @@ public class MapDetailActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_detail);
+        if (getActionBar() != null){
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         FragmentTransaction trans = getFragmentManager().beginTransaction();
 
         if (savedInstanceState==null){

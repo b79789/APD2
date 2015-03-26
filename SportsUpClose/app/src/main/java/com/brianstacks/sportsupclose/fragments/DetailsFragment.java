@@ -1,11 +1,11 @@
 package com.brianstacks.sportsupclose.fragments;
 
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +19,6 @@ import com.brianstacks.sportsupclose.GooglePlace;
 import com.brianstacks.sportsupclose.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -88,6 +87,9 @@ public class DetailsFragment extends Fragment{
 
                     getFragmentManager().beginTransaction().replace(R.id.container, new DirectionsFragment()).addToBackStack(null).commit();
 
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
             default:
                 break;
@@ -169,27 +171,10 @@ public class DetailsFragment extends Fragment{
                     mMap.addMarker(mo2);
                     mMarkers.put(marker.getId(), googlePlace);
                     mMap.setInfoWindowAdapter(new MarkerAdapter());
-                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-
-                        }
-                    });
-                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng latLng) {
-
-                        }
-                    });
-                    mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                        @Override
-                        public void onMapLongClick(LatLng latLng) {
-
-                        }
-                    });
-                    mMap.setPadding(20,20,20,20);
+                    mMap.setPadding(0,0,0,100);
                     mMap.setMyLocationEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
+                    mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.getUiSettings().setMapToolbarEnabled(true);
                     // set the animate camera between the two points here
                     LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();

@@ -27,7 +27,11 @@
         </activity>
         <activity
             android:name=".MapDetailActivity"
-            android:label="@string/title_activity_map_detail" >
+            android:label="@string/title_activity_map_detail"
+            android:parentActivityName=".MainActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />>
         </activity>
         <!--Include the AdActivity configChanges and theme. -->
         <activity android:name="com.google.android.gms.ads.AdActivity"

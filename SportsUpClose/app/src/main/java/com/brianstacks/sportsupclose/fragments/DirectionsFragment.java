@@ -3,6 +3,7 @@ package com.brianstacks.sportsupclose.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,12 +73,8 @@ public class DirectionsFragment extends Fragment {
 
                 // Not implemented here
                 return true;
-            case R.id.directionAction:
-                // Do Fragment menu item stuff here
-
-
-                getFragmentManager().beginTransaction().replace(R.id.container, new DirectionsFragment()).addToBackStack(null).commit();
-
+            case android.R.id.home:
+                getFragmentManager().popBackStack();
                 return true;
             default:
                 break;
